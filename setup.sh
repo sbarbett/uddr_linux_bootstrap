@@ -19,6 +19,12 @@ listen_addresses = ['127.0.0.1:53'] # Ensure dnscrypt-proxy listens on port 53
 stamp = '${DNSCRYPT_STAMP}'
 EOF
 
+# Override settings
+sudo mkdir -p /etc/systemd/system/dnscrypt-proxy.service.d
+echo "[Service]" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
+echo "DynamicUser=yes" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
+echo "AmbientCapabilities=cap_net_bind_service cap_net_broadcast cap_net_admin cap_net_raw" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
+
 # Restart dnscrypt-proxy to apply the configuration
 sudo systemctl restart dnscrypt-proxy
 
