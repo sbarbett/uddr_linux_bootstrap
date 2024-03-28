@@ -25,6 +25,7 @@ sudo systemctl restart dnscrypt-proxy
 # Configure systemd-resolved to use the local dnscrypt-proxy as the DNS server
 sudo mkdir -p /etc/systemd/resolved.conf.d
 echo "[Resolve]" | sudo tee /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
+echo "DNSStubListener=no" | sudo tee -a /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
 echo "DNS=127.0.0.1" | sudo tee -a /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
 echo "Domains=~" | sudo tee -a /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
 
