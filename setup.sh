@@ -13,17 +13,17 @@ sudo apt update && sudo apt install -y dnscrypt-proxy
 # Configure dnscrypt-proxy to use your custom DoH server
 sudo tee /etc/dnscrypt-proxy/dnscrypt-proxy.toml > /dev/null <<EOF
 server_names = ['custom-uddr']
-listen_addresses = ['127.0.0.1:53'] # Ensure dnscrypt-proxy listens on port 53
+listen_addresses = ['127.0.0.5:53'] # Ensure dnscrypt-proxy listens on port 53
 
 [static.'custom-uddr']
 stamp = '${DNSCRYPT_STAMP}'
 EOF
 
 # Override settings
-sudo mkdir -p /etc/systemd/system/dnscrypt-proxy.service.d
-echo "[Service]" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
-echo "DynamicUser=yes" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
-echo "AmbientCapabilities=cap_net_bind_service cap_net_broadcast cap_net_admin cap_net_raw" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
+#sudo mkdir -p /etc/systemd/system/dnscrypt-proxy.service.d
+#echo "[Service]" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
+#echo "DynamicUser=yes" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
+#echo "AmbientCapabilities=cap_net_bind_service cap_net_broadcast cap_net_admin cap_net_raw" | sudo tee /etc/systemd/system/dnscrypt-proxy.service.d/override.conf > /dev/null
 
 # Restart dnscrypt-proxy to apply the configuration
 sudo systemctl restart dnscrypt-proxy
@@ -32,7 +32,7 @@ sudo systemctl restart dnscrypt-proxy
 sudo mkdir -p /etc/systemd/resolved.conf.d
 echo "[Resolve]" | sudo tee /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
 echo "DNSStubListener=no" | sudo tee -a /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
-echo "DNS=127.0.0.1" | sudo tee -a /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
+echo "DNS=127.0.0.5" | sudo tee -a /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
 echo "Domains=~" | sudo tee -a /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
 
 # Re-enable and restart systemd-resolved to apply changes
