@@ -44,6 +44,12 @@ sudo dnscrypt-proxy -config /etc/dnscrypt-proxy/dnscrypt-proxy.toml -service ins
 # Start dnscrypt-proxy service
 sudo service dnscrypt-proxy start
 
+#### UDDR Certificate Installation #####
+wget https://ca.ultraddr.com/cert/pem/ultraddr-ca-cert.pem
+sudo mv ultraddr-ca-cert.pem /usr/local/share/ca-certificates/ultraddr.crt
+sudo update-ca-certificates
+#######################################
+
 # Configure systemd-resolved to use the local dnscrypt-proxy as the DNS server
 sudo mkdir -p /etc/systemd/resolved.conf.d
 echo "[Resolve]" | sudo tee /etc/systemd/resolved.conf.d/uddr.conf > /dev/null
