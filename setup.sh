@@ -1,13 +1,12 @@
 #!/bin/bash
 
-# Check if DNSCrypt stamps are provided
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 {dnscrypt_stamp1} {dnscrypt_stamp2}"
+# Check if a Client ID is provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 {client_id}"
     exit 1
 fi
 
-DNSCRYPT_STAMP1="$1"
-DNSCRYPT_STAMP2="$2"
+CLIENT_ID="$1"
 
 # Install dnscrypt-proxy. This example uses apt, adjust for your package manager if necessary
 sudo apt update && sudo apt install -y dnscrypt-proxy
@@ -26,17 +25,12 @@ sudo rm -rf /var/lib/systemd/deb-systemd-helper-enabled/dnscrypt-proxy.*
 sudo systemctl daemon-reload
 sudo systemctl reset-failed
 
-# Configure dnscrypt-proxy to use custom DoH servers
-sudo tee /etc/dnscrypt-proxy/dnscrypt-proxy.toml > /dev/null <<EOF
-server_names = ['custom-uddr1', 'custom-uddr2']
-listen_addresses = ['127.0.0.5:53'] # Ensure dnscrypt-proxy listens on port 53
+# Run the Python script to generate the dnscrypt-proxy.toml file
+sudo chmod +x stampgen.py
+python3 stampgen.py "${CLIENT_ID}"
 
-[static.'custom-uddr1']
-stamp = '${DNSCRYPT_STAMP1}'
-
-[static.'custom-uddr2']
-stamp = '${DNSCRYPT_STAMP2}'
-EOF
+# Move the generated dnscrypt-proxy.toml to the appropriate directory
+sudo mv dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml
 
 # Install dnscrypt-proxy as a service using the newly configured settings
 sudo dnscrypt-proxy -config /etc/dnscrypt-proxy/dnscrypt-proxy.toml -service install

@@ -7,3 +7,5 @@
 # Exclude some file types
 *.sublime-project
 *.sublime-workspace%  
+*.toml
+*.old
