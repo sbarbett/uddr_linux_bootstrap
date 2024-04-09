@@ -5,22 +5,8 @@ This script demonstrates the setup of Vercara's UltraDDR product on a Linux syst
 ## Prerequisites
 
 - Ubuntu (I tested this on Ubuntu and adjustments may be needed for other Linux distributions)
+- Python
 - Sudo privileges
-
-## Generating DNSCrypt Stamps
-
-Before running the script, generate your DNSCrypt stamps:
-
-1. Visit [DNSCrypt](https://dnscrypt.info/stamps/).
-2. Change the **Protocol** to **DNS-over-HTTPS**.
-3. Generate the first stamp:
-   - **IP**: `204.74.103.5`
-   - **Host**: `rcsv1.ddr.ultradns.com`
-   - **Path**: `/{your_uddr_client_id}` (Replace `{your_uddr_client_id}` with your unique client ID)
-4. Generate the second stamp:
-   - **IP**: `204.74.122.5`
-   - **Host**: `rcsv2.ddr.ultradns.com`
-   - **Path**: Use the same path as the first stamp.
 
 ## Installation and Configuration
 
@@ -33,17 +19,17 @@ Before running the script, generate your DNSCrypt stamps:
    cd uddr_linux_bootstrap
    chmod +x setup.sh
    ```
-3. Execute the script, passing your stamps as arguments:
+3. Execute the script:
    ```bash
-   sudo ./setup.sh {dnscrypt_stamp1} {dnscrypt_stamp2}
+   sudo ./setup.sh {client_id)
    ```
-   Replace `{dnscrypt_stamp1}` and `{dnscrypt_stamp2}` with the stamps generated in the previous step.
+   Replace `{client_id}` with your UDDR client UID (it's also called an install key in the settings).
 
 ## Script Functions
 
 - Installs `dnscrypt-proxy`.
 - Stops/disables any existing `dnscrypt-proxy` service to prevent conflicts.
-- Configures `dnscrypt-proxy` to use your specified DoH servers.
+- Configures `dnscrypt-proxy` to use UDDR DNS resolvers linked to your client ID.
 - Adjusts `dnscrypt-proxy` to listen on `127.0.0.5:53`.
 - Redirects the system's DNS queries to `dnscrypt-proxy`.
 - Applies the configuration changes by restarting related services.
